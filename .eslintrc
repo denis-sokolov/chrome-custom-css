@@ -1,0 +1,16 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "chrome": false,
+    "Permissions": true,
+    "Persist": true,
+    "Promise": false,
+    "Origins": true
+  }
+}

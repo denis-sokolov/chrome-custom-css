@@ -1,0 +1,58 @@
+body {
+  font-family: sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+section {
+  display: none;
+  width: 100%;
+}
+
+section.message {
+  box-sizing: border-box;
+  min-width: 300px;
+  margin: 20px 0 25px;
+  padding: 0 40px;
+}
+
+.request-permission {
+}
+.request-permission-p {
+}
+
+.main {
+}
+.main-textarea-label {
+  font-size: 70%;
+}
+.main-textarea {
+  border: 0;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  box-sizing: border-box;
+  font-family: monospace;
+  margin: 0;
+  outline: 0;
+  padding: 5px;
+  max-height: 600px;
+  min-height: 350px;
+  max-width: 500px;
+  min-width: 400px;
+}
+
+.attribution {
+  font-size: 8px;
+  text-align: right;
+}
+.attribution a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  padding: 5px 10px;
+  font-size: 90%;
+  cursor: pointer;
+}

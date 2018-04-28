@@ -1,0 +1,27 @@
+{
+  "extension_name": {
+    "message": "Custom CSS by Denis"
+  },
+  "extension_short_name": {
+    "message": "Custom CSS"
+  },
+  "extension_description": {
+    "message": "Minimal and secure way to add custom CSS per-domain"
+  },
+
+  "grant_permission": {
+    "message": "Grant permission"
+  },
+  "invalid_tab_1": {
+    "message": "Unable to add custom CSS on special tabs."
+  },
+  "invalid_tab_2": {
+    "message": "Try a website."
+  },
+  "main_textarea_label": {
+    "message": "Styles for $1:"
+  },
+  "need_permission": {
+    "message": "Need permission to edit $1"
+  }
+}
