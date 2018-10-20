@@ -1,16 +1,25 @@
 window.Persist = (function() {
+  const mapToObject = input => {
+    const output = {};
+    for (let [k, v] of input) output[k] = v;
+    return output;
+  };
   const prefix = "custom-css-";
   const keyFor = domain => prefix + domain;
   const isDomainKey = key => key.startsWith(prefix);
   const domainFromKey = key => key.substr(prefix.length);
+  const cssFromValue = value => value.css || "";
+  const writeCache = new window.Map();
+  let writeQueued = false;
 
   return {
     get: function(domain) {
       return new Promise(function(resolve) {
         const key = keyFor(domain);
+        if (writeCache.has(key))
+          return resolve(cssFromValue(writeCache.get(key)));
         chrome.storage.sync.get(key, function(storage) {
-          const data = storage[key] || {};
-          resolve(data.css || "");
+          resolve(cssFromValue(storage[key] || {}));
         });
       });
     },
@@ -21,8 +30,10 @@ window.Persist = (function() {
             .filter(isDomainKey)
             .map(key => ({
               domain: domainFromKey(key),
-              css: storage[key].css || ""
+              css: cssFromValue(storage[key])
             }));
+          for (let [k, v] of writeCache)
+            result[domainFromKey(k)] = cssFromValue(v);
           resolve(result);
         });
       });
@@ -30,21 +41,25 @@ window.Persist = (function() {
     remove: function(domains) {
       return new Promise(function(resolve) {
         const keys = domains.map(keyFor);
+        keys.forEach(key => writeCache.delete(key));
         chrome.storage.sync.remove(keys, () => resolve());
       });
     },
     set: function(domain, css) {
-      return new Promise(function(resolve) {
-        chrome.storage.sync.set(
-          {
-            [keyFor(domain)]: {
-              css: css,
-              updated: Date.now()
-            }
-          },
-          () => resolve()
-        );
+      writeCache.set(keyFor(domain), {
+        css,
+        updated: Date.now()
       });
+      if (!writeQueued) {
+        writeQueued = true;
+        // Chrome limits writes at 120 per minute
+        setTimeout(() => {
+          chrome.storage.sync.set(mapToObject(writeCache));
+          writeCache.clear();
+          writeQueued = false;
+        }, 1000);
+      }
+      return Promise.resolve();
     }
   };
 })();
