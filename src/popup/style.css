@@ -42,11 +42,11 @@ section.message {
   min-width: 400px;
 }
 
-.attribution {
+.footer {
   font-size: 8px;
   text-align: right;
 }
-.attribution a {
+.footer a {
   color: inherit;
   text-decoration: none;
 }
