@@ -48,6 +48,8 @@ section.message {
 }
 .footer a {
   color: inherit;
+  /* Wrap the block atomically */
+  display: inline-block;
   text-decoration: none;
 }
 
