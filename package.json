@@ -2,7 +2,7 @@
   "name": "custom-css",
   "description": "An extension for Google Chrome to add custom CSS on websites.",
   "scripts": {
-    "format": "prettier --write 'src/**/*.{css,html,js}'",
+    "format": "prettier --end-of-line auto --write 'src/**/*.{css,html,js}'",
     "pack": "rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/"
   },
   "license": "ISC",
