@@ -7,6 +7,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@types/chrome": "^0.0.202",
     "eslint": "^8.28.0",
     "prettier": "^2.7.1"
   }
