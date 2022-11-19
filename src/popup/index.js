@@ -1,18 +1,18 @@
 const $ = document.querySelector.bind(document);
 
-const invalidTabStep = function() {
+const invalidTabStep = function () {
   $(".invalid-tab").style.display = "block";
 };
 
-const permissionStep = function(domain) {
+const permissionStep = function (domain) {
   $(".request-permission-p").innerText = chrome.i18n.getMessage(
     "need_permission",
     Origins.cosmeticDomain(domain)
   );
 
-  $(".request-permission-button").addEventListener("click", function() {
+  $(".request-permission-button").addEventListener("click", function () {
     const origins = Origins.domainToOrigins(domain);
-    Permissions.request(origins).then(function() {
+    Permissions.request(origins).then(function () {
       $(".request-permission").style.display = "none";
       mainStep(domain);
     });
@@ -21,8 +21,8 @@ const permissionStep = function(domain) {
   $(".request-permission").style.display = "block";
 };
 
-const mainStep = function(domain) {
-  Persist.get(domain).then(function(initialCss) {
+const mainStep = function (domain) {
+  Persist.get(domain).then(function (initialCss) {
     $(".main-textarea-label").innerText = chrome.i18n.getMessage(
       "main_textarea_label",
       Origins.cosmeticDomain(domain)
@@ -30,12 +30,12 @@ const mainStep = function(domain) {
 
     $(".main-textarea").innerHTML = initialCss;
 
-    $(".main-textarea").addEventListener("input", function(e) {
+    $(".main-textarea").addEventListener("input", function (e) {
       const css = e.target.value;
       chrome.runtime.sendMessage({
         type: "css-changed",
         css: css,
-        domain: domain
+        domain: domain,
       });
     });
 
@@ -43,14 +43,14 @@ const mainStep = function(domain) {
   });
 };
 
-chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   if (tabs.length !== 1) return;
   const url = tabs[0].url;
   if (!url) return invalidTabStep();
   const origin = Origins.urlToOrigin(url);
   const domain = Origins.originToDomain(origin);
 
-  Permissions.checkOrigin(origin).then(function(allowed) {
+  Permissions.checkOrigin(origin).then(function (allowed) {
     if (allowed) mainStep(domain);
     else permissionStep(domain);
   });

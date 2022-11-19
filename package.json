@@ -8,6 +8,6 @@
   "license": "ISC",
   "dependencies": {
     "eslint": "^5.16.0",
-    "prettier": "^1.14.3"
+    "prettier": "^2.7.1"
   }
 }
