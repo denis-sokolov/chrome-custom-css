@@ -21,37 +21,36 @@ const permissionStep = function (domain) {
   $(".request-permission").style.display = "block";
 };
 
-const mainStep = function (domain) {
-  Persist.get(domain).then(function (initialCss) {
-    $(".main-textarea-label").innerText = chrome.i18n.getMessage(
-      "main_textarea_label",
-      Origins.cosmeticDomain(domain)
-    );
+const mainStep = async function (domain) {
+  const initialCss = await Persist.get(domain);
 
-    $(".main-textarea").innerHTML = initialCss;
+  $(".main-textarea-label").innerText = chrome.i18n.getMessage(
+    "main_textarea_label",
+    Origins.cosmeticDomain(domain)
+  );
 
-    $(".main-textarea").addEventListener("input", function (e) {
-      const css = e.target.value;
-      chrome.runtime.sendMessage({
-        type: "css-changed",
-        css: css,
-        domain: domain,
-      });
+  $(".main-textarea").innerHTML = initialCss;
+
+  $(".main-textarea").addEventListener("input", function (e) {
+    const css = e.target.value;
+    chrome.runtime.sendMessage({
+      type: "css-changed",
+      css: css,
+      domain: domain,
     });
-
-    $(".main").style.display = "block";
   });
+
+  $(".main").style.display = "block";
 };
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
   if (tabs.length !== 1) return;
   const url = tabs[0].url;
   if (!url) return invalidTabStep();
   const origin = Origins.urlToOrigin(url);
   const domain = Origins.originToDomain(origin);
 
-  Permissions.checkOrigin(origin).then(function (allowed) {
-    if (allowed) mainStep(domain);
-    else permissionStep(domain);
-  });
+  const allowed = await Permissions.checkOrigin(origin);
+  if (allowed) mainStep(domain);
+  else permissionStep(domain);
 });

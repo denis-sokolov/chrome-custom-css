@@ -13,37 +13,27 @@ globalThis.Persist = (function () {
   let writeQueued = false;
 
   return {
-    get: function (domain) {
-      return new Promise(function (resolve) {
-        const key = keyFor(domain);
-        if (writeCache.has(key))
-          return resolve(cssFromValue(writeCache.get(key)));
-        chrome.storage.sync.get(key, function (storage) {
-          resolve(cssFromValue(storage[key] || {}));
-        });
-      });
+    get: async function (domain) {
+      const key = keyFor(domain);
+      if (writeCache.has(key)) return cssFromValue(writeCache.get(key));
+      const storage = await chrome.storage.sync.get(key);
+      return cssFromValue(storage[key] || {});
     },
-    getAll: function () {
-      return new Promise(function (resolve) {
-        chrome.storage.sync.get(null, function (storage) {
-          const result = Object.keys(storage)
-            .filter(isDomainKey)
-            .map((key) => ({
-              domain: domainFromKey(key),
-              css: cssFromValue(storage[key]),
-            }));
-          for (let [k, v] of writeCache)
-            result[domainFromKey(k)] = cssFromValue(v);
-          resolve(result);
-        });
-      });
+    getAll: async function () {
+      const storage = await chrome.storage.sync.get(null);
+      const result = Object.keys(storage)
+        .filter(isDomainKey)
+        .map((key) => ({
+          domain: domainFromKey(key),
+          css: cssFromValue(storage[key]),
+        }));
+      for (let [k, v] of writeCache) result[domainFromKey(k)] = cssFromValue(v);
+      return result;
     },
-    remove: function (domains) {
-      return new Promise(function (resolve) {
-        const keys = domains.map(keyFor);
-        keys.forEach((key) => writeCache.delete(key));
-        chrome.storage.sync.remove(keys, () => resolve());
-      });
+    remove: async function (domains) {
+      const keys = domains.map(keyFor);
+      keys.forEach((key) => writeCache.delete(key));
+      await chrome.storage.sync.remove(keys);
     },
     set: function (domain, css) {
       writeCache.set(keyFor(domain), {
