@@ -1,4 +1,4 @@
-window.Persist = (function () {
+globalThis.Persist = (function () {
   const mapToObject = (input) => {
     const output = {};
     for (let [k, v] of input) output[k] = v;
@@ -9,7 +9,7 @@ window.Persist = (function () {
   const isDomainKey = (key) => key.startsWith(prefix);
   const domainFromKey = (key) => key.substr(prefix.length);
   const cssFromValue = (value) => value.css || "";
-  const writeCache = new window.Map();
+  const writeCache = new globalThis.Map();
   let writeQueued = false;
 
   return {

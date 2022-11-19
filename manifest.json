@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extension_name__",
   "short_name": "__MSG_extension_short_name__",
   "version": "1.0.1",
@@ -14,17 +14,12 @@
   },
 
   "background": {
-    "scripts": [
-      "src/lib/permissions.js",
-      "src/lib/persist.js",
-      "src/lib/origins.js",
-      "src/background/index.js"
-    ],
-    "persistent": false
+    "service_worker": "src/background/index.js",
+    "type": "module"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "src/popup/index.html"
   },
-  "optional_permissions": ["http://*/", "https://*/"],
-  "permissions": ["activeTab", "storage"]
+  "optional_host_permissions": ["http://*/", "https://*/"],
+  "permissions": ["activeTab", "scripting", "storage"]
 }

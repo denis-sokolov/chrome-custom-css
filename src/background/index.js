@@ -1,3 +1,9 @@
+import "../lib/origins.js";
+import "../lib/permissions.js";
+import "../lib/persist.js";
+
+const { Origins, Permissions, Persist } = globalThis;
+
 const ensureTab = function (tabOrTabId) {
   if (typeof tabOrTabId === "number")
     return new Promise(function (resolve) {
@@ -39,10 +45,10 @@ const initTabs = function (tabs) {
 
 const injectTabCode = function (tab) {
   return new Promise(function (resolve) {
-    chrome.tabs.executeScript(
-      tab.id,
+    chrome.scripting.executeScript(
       {
-        file: "src/content/index.js",
+        target: { tabId: tab.id },
+        files: ["src/content/index.js"],
       },
       resolve
     );

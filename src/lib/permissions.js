@@ -1,4 +1,4 @@
-Permissions = (function () {
+globalThis.Permissions = (function () {
   const api = {
     checkOrigin: function (origin) {
       return new Promise(function (resolve) {
