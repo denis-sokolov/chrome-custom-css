@@ -15,9 +15,6 @@
   "invalid_tab_1": {
     "message": "특수 탭에는 스타일을 삽입할 수 없습니다."
   },
-  "invalid_tab_2": {
-    "message": "Try a website."
-  },
   "main_textarea_label": {
     "message": "\"$1\" 에 적용할 스타일"
   },
