@@ -1,0 +1,27 @@
+{
+  "extension_name": {
+    "message": "Custom CSS by Denis"
+  },
+  "extension_short_name": {
+    "message": "Custom CSS"
+  },
+  "extension_description": {
+    "message": "도메인별 스타일을 추가하는 간단하고 안전한 방법"
+  },
+
+  "grant_permission": {
+    "message": "권한 승인"
+  },
+  "invalid_tab_1": {
+    "message": "특수 탭에는 스타일을 삽입할 수 없습니다."
+  },
+  "invalid_tab_2": {
+    "message": "Try a website."
+  },
+  "main_textarea_label": {
+    "message": "\"$1\" 에 적용할 스타일"
+  },
+  "need_permission": {
+    "message": "\"$1\" 도메인에 스타일을 삽입하기 위해 권한이 필요합니다."
+  }
+}
