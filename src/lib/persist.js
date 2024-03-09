@@ -15,9 +15,26 @@ globalThis.Persist = (function () {
   return {
     get: async function (domain) {
       const key = keyFor(domain);
-      if (writeCache.has(key)) return cssFromValue(writeCache.get(key));
-      const storage = await chrome.storage.sync.get(key);
-      return cssFromValue(storage[key] || {});
+
+      const DEFAULT_DATA = {
+        enabled: true,
+        css: "",
+      };
+
+      let data;
+      if (writeCache.has(key)) {
+        data = writeCache.get(key)
+      } else {
+        const storage = await chrome.storage.sync.get(key);
+        data = storage[key]
+      }
+
+      return Object.assign(
+        DEFAULT_DATA,
+        typeof data === "string"
+          ? { css: data }
+          : data
+      );
     },
     getAll: async function () {
       const storage = await chrome.storage.sync.get(null);
@@ -35,9 +52,10 @@ globalThis.Persist = (function () {
       keys.forEach((key) => writeCache.delete(key));
       await chrome.storage.sync.remove(keys);
     },
-    set: function (domain, css) {
+    set: function (domain, css, enabled) {
       writeCache.set(keyFor(domain), {
         css,
+        enabled,
         updated: Date.now(),
       });
       if (!writeQueued) {

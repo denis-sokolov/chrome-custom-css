@@ -11,7 +11,11 @@
 
   chrome.runtime.onMessage.addListener(function (msg) {
     if (msg.type === "your-css-changed") {
-      style.innerHTML = msg.css;
+      if (msg.enabled === true) {
+        style.innerHTML = msg.css;
+      } else {
+        style.innerHTML = "";
+      }
     }
   });
 })();

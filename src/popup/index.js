@@ -22,23 +22,26 @@ const permissionStep = function (domain) {
 };
 
 const mainStep = async function (domain) {
-  const initialCss = await Persist.get(domain);
+  const data = await Persist.get(domain);
 
   $(".main-textarea-label").innerText = chrome.i18n.getMessage(
     "main_textarea_label",
     Origins.cosmeticDomain(domain)
   );
 
-  $(".main-textarea").innerHTML = initialCss;
+  $(".main-textarea").innerHTML = data.css;
+  $("#enabled").checked = Boolean(data.enabled)
 
-  $(".main-textarea").addEventListener("input", function (e) {
-    const css = e.target.value;
+  function stateChangeHander() {
     chrome.runtime.sendMessage({
       type: "css-changed",
-      css: css,
-      domain: domain,
-    });
-  });
+      css: $(".main-textarea").value,
+      enabled: $("#enabled").checked,
+      domain: domain
+    })
+  }
+  $("#enabled").addEventListener("change", stateChangeHander);
+  $(".main-textarea").addEventListener("input", stateChangeHander);
 
   $(".main").style.display = "block";
 };

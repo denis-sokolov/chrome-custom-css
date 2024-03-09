@@ -28,9 +28,9 @@ const initTab = async function (tabOrTabId) {
   if (!url) return;
   const domain = Origins.urlToDomain(url);
   const t = await Promise.all([Persist.get(domain), injectTabCode(tab)]);
-  const css = t[0];
-  if (!css) return;
-  updateTabCss(tab, css);
+  const data = t[0];
+  if (!data.enabled) return
+  updateTabCss(tab, data.css, data.enabled);
 };
 
 const initTabs = async function (tabs) {
@@ -44,10 +44,11 @@ const injectTabCode = async function (tab) {
   });
 };
 
-const updateTabCss = function (tab, css) {
+const updateTabCss = function (tab, css, enabled) {
   chrome.tabs.sendMessage(tab.id, {
     type: "your-css-changed",
     css: css,
+    enabled: enabled
   });
 };
 
@@ -86,7 +87,7 @@ Permissions.onAddedOrigins(function (origins) {
 chrome.runtime.onMessage.addListener(async function (msg) {
   if (msg.type === "css-changed") {
     const tabs = await getTabsForDomain(msg.domain);
-    tabs.forEach((tab) => updateTabCss(tab, msg.css));
-    Persist.set(msg.domain, msg.css);
+    tabs.forEach((tab) => updateTabCss(tab, msg.css, msg.enabled));
+    Persist.set(msg.domain, msg.css, msg.enabled);
   }
 });
