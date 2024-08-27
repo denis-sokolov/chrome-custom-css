@@ -29,18 +29,23 @@ const mainStep = async function (domain) {
     Origins.cosmeticDomain(domain)
   );
 
-  $(".main-textarea").innerHTML = initialCss;
+  $(".main").style.display = "block";
 
-  $(".main-textarea").addEventListener("input", function (e) {
-    const css = e.target.value;
+  // Have to create the editor after the element is visible,
+  // or initially the cursor is not displayed.
+  const editor = CodeMirror.fromTextArea($(".main-textarea"), {
+    autofocus: true,
+    value: initialCss,
+  });
+
+  editor.on("change", function () {
+    const css = editor.getValue();
     chrome.runtime.sendMessage({
       type: "css-changed",
       css: css,
       domain: domain,
     });
   });
-
-  $(".main").style.display = "block";
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {

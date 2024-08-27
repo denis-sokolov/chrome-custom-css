@@ -17,6 +17,13 @@ section.message {
   padding: 0 40px;
 }
 
+.main {
+  max-height: 600px;
+  min-height: 350px;
+  max-width: 500px;
+  min-width: 400px;
+}
+
 .main-textarea-label {
   font-size: 70%;
   margin-left: 0.5em;
@@ -30,10 +37,6 @@ section.message {
   margin: 0;
   outline: 0;
   padding: 5px;
-  max-height: 600px;
-  min-height: 350px;
-  max-width: 500px;
-  min-width: 400px;
 }
 
 .footer {

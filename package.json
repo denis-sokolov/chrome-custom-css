@@ -3,11 +3,12 @@
   "description": "An extension for Google Chrome to add custom CSS on websites.",
   "scripts": {
     "format": "prettier --end-of-line auto --write 'src/**/*.{css,html,js}'",
-    "pack": "rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/"
+    "pack": "rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/ && mkdir -p dist/node_modules/codemirror/lib dist/node_modules/codemirror/mode/css dist/node_modules/codemirror/addon/display && cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/codemirror.js dist/node_modules/codemirror/lib/ && cp node_modules/codemirror/mode/css/css.js dist/node_modules/codemirror/mode/css/ && cp node_modules/codemirror/addon/display/placeholder.js dist/node_modules/codemirror/addon/display/"
   },
   "license": "ISC",
   "dependencies": {
     "@types/chrome": "^0.0.202",
+    "codemirror": "^5.65.17",
     "eslint": "^8.28.0",
     "prettier": "^2.7.1"
   }

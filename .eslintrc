@@ -9,6 +9,7 @@
   },
   "globals": {
     "chrome": false,
+    "CodeMirror": false,
     "globalThis": false,
     "Permissions": true,
     "Persist": true,
