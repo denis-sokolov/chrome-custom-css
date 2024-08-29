@@ -35,8 +35,9 @@ const mainStep = async function (domain) {
   // or initially the cursor is not displayed.
   const editor = CodeMirror.fromTextArea($(".main-textarea"), {
     autofocus: true,
-    value: initialCss,
   });
+
+  editor.setValue(initialCss);
 
   editor.on("change", function () {
     const css = editor.getValue();
