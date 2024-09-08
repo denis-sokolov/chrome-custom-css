@@ -4,13 +4,6 @@ import "../lib/persist.js";
 
 const { Origins, Permissions, Persist } = globalThis;
 
-const ensureTab = async function (tabOrTabId) {
-  if (typeof tabOrTabId === "number") {
-    return await chrome.tabs.get(tabOrTabId);
-  }
-  return tabOrTabId;
-};
-
 const getTabsForDomain = async function (domain) {
   const tabMatchesDomain = function (tab, domain) {
     const url = tab.url;
@@ -22,8 +15,7 @@ const getTabsForDomain = async function (domain) {
   return tabs.filter((tab) => tabMatchesDomain(tab, domain));
 };
 
-const initTab = async function (tabOrTabId) {
-  const tab = await ensureTab(tabOrTabId);
+const initTab = async function (tab) {
   const url = tab.url;
   if (!url) return;
   const domain = Origins.urlToDomain(url);
@@ -70,8 +62,8 @@ setTimeout(async function () {
   Permissions.remove(originsToDrop);
 }, 100);
 
-chrome.tabs.onUpdated.addListener((id) => {
-  initTab(id);
+chrome.tabs.onUpdated.addListener((_id, _info, tab) => {
+  initTab(tab);
 });
 
 Permissions.onAddedOrigins(function (origins) {
