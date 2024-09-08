@@ -27,8 +27,7 @@ const initTab = async function (tabOrTabId) {
   const url = tab.url;
   if (!url) return;
   const domain = Origins.urlToDomain(url);
-  const t = await Promise.all([Persist.get(domain), injectTabCode(tab)]);
-  const css = t[0];
+  const css = await Persist.get(domain);
   if (!css) return;
   updateTabCss(tab, css);
 };
@@ -37,18 +36,19 @@ const initTabs = async function (tabs) {
   return Promise.all(tabs.map(initTab));
 };
 
-const injectTabCode = async function (tab) {
-  await chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ["src/content/index.js"],
-  });
-};
-
+const cssPerTab = new Map();
+chrome.tabs.onRemoved.addListener(tabId => cssPerTab.delete(tabId));
 const updateTabCss = function (tab, css) {
-  chrome.tabs.sendMessage(tab.id, {
-    type: "your-css-changed",
-    css: css,
-  });
+  const previousCss = cssPerTab.get(tab.id);
+  if (previousCss) chrome.scripting.removeCSS(previousCss);
+
+  const newCss = {
+    target: { tabId: tab.id },
+    css,
+    origin: 'AUTHOR'
+  };
+  cssPerTab.set(tab.id, newCss);
+  chrome.scripting.insertCSS(newCss);
 };
 
 setTimeout(async function () {

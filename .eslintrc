@@ -11,6 +11,7 @@
     "chrome": false,
     "CodeMirror": false,
     "globalThis": false,
+    "Map": false,
     "Permissions": true,
     "Persist": true,
     "Promise": false,
