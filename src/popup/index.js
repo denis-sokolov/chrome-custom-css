@@ -31,13 +31,12 @@ const mainStep = async function (domain) {
 
   $(".main").style.display = "block";
 
+
   // Have to create the editor after the element is visible,
   // or initially the cursor is not displayed.
   const editor = CodeMirror.fromTextArea($(".main-textarea"), {
     autofocus: true,
   });
-
-  editor.setValue(initialCss);
 
   editor.on("change", function () {
     const css = editor.getValue();
@@ -46,7 +45,13 @@ const mainStep = async function (domain) {
       css: css,
       domain: domain,
     });
+
+    const maxlength = $(".main-textarea").getAttribute('maxlength');
+    if (css.length > maxlength) $('.main').dataset.tooLong = true;
+    else delete $('.main').dataset.tooLong;
   });
+
+  editor.setValue(initialCss);
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {

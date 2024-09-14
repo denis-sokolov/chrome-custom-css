@@ -24,6 +24,17 @@ section.message {
   min-width: 400px;
 }
 
+.too-long-warning {
+  display: none;
+}
+[data-too-long] .too-long-warning {
+  display: block;
+  color: red;
+  font-weight: bold;
+  padding: 12px;
+  margin: 0;
+}
+
 .main-textarea-label {
   font-size: 70%;
   margin-left: 0.5em;
