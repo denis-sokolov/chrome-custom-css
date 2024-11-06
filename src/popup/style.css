@@ -49,6 +49,9 @@ section.message {
   outline: 0;
   padding: 5px;
 }
+.CodeMirror-empty {
+  color: lightgray;
+}
 
 .footer {
   font-size: 8px;
