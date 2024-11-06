@@ -1,3 +1,7 @@
+# 1.3.5
+
+- Improve placeholder color.
+
 # 1.3.4
 
 - Revert CSS injection method because it provided us with a lower specificity.
