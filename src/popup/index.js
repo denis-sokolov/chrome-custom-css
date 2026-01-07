@@ -31,27 +31,47 @@ const mainStep = async function (domain) {
 
   $(".main").style.display = "block";
 
+  // Get the textarea element
+  const textarea = $(".main-textarea");
+  const maxlength = textarea.getAttribute('maxlength');
+  
+  // Replace textarea with a div for CodeMirror 6
+  const editorContainer = document.createElement('div');
+  editorContainer.className = 'main-editor';
+  textarea.parentNode.insertBefore(editorContainer, textarea);
+  textarea.style.display = 'none';
 
-  // Have to create the editor after the element is visible,
-  // or initially the cursor is not displayed.
-  const editor = CodeMirror.fromTextArea($(".main-textarea"), {
-    autofocus: true,
+  // Create CodeMirror 6 editor
+  const { EditorView, basicSetup, css, placeholder } = window.CodeMirrorBundle;
+  
+  const editor = new EditorView({
+    doc: initialCss,
+    extensions: [
+      basicSetup,
+      css(),
+      placeholder(textarea.getAttribute('placeholder') || ''),
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const cssContent = editor.state.doc.toString();
+          chrome.runtime.sendMessage({
+            type: "css-changed",
+            css: cssContent,
+            domain: domain,
+          });
+
+          if (cssContent.length > maxlength) {
+            $('.main').dataset.tooLong = true;
+          } else {
+            delete $('.main').dataset.tooLong;
+          }
+        }
+      })
+    ],
+    parent: editorContainer
   });
 
-  editor.on("change", function () {
-    const css = editor.getValue();
-    chrome.runtime.sendMessage({
-      type: "css-changed",
-      css: css,
-      domain: domain,
-    });
-
-    const maxlength = $(".main-textarea").getAttribute('maxlength');
-    if (css.length > maxlength) $('.main').dataset.tooLong = true;
-    else delete $('.main').dataset.tooLong;
-  });
-
-  editor.setValue(initialCss);
+  // Focus the editor
+  editor.focus();
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {

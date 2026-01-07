@@ -1,15 +1,24 @@
 {
   "name": "custom-css",
   "description": "An extension for Google Chrome to add custom CSS on websites.",
+  "type": "module",
   "scripts": {
     "format": "prettier --end-of-line auto --write 'src/**/*.{css,html,js}'",
-    "pack": "rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/ && mkdir -p dist/node_modules/codemirror/lib dist/node_modules/codemirror/mode/css dist/node_modules/codemirror/addon/display && cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/codemirror.js dist/node_modules/codemirror/lib/ && cp node_modules/codemirror/mode/css/css.js dist/node_modules/codemirror/mode/css/ && cp node_modules/codemirror/addon/display/placeholder.js dist/node_modules/codemirror/addon/display/"
+    "build": "rollup -c",
+    "pack": "npm run build && rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/ && rm dist/src/popup/codemirror-bundle.js && mkdir -p dist/lib && cp .tmp/codemirror.bundle.js dist/lib/"
   },
   "license": "ISC",
   "dependencies": {
+    "@codemirror/commands": "^6.10.1",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/state": "^6.5.3",
+    "@codemirror/view": "^6.39.9",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/chrome": "^0.0.202",
-    "codemirror": "^5.65.17",
+    "codemirror": "^6.0.2",
     "eslint": "^8.28.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "rollup": "^4.55.1"
   }
 }

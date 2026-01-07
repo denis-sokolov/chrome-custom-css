@@ -24,6 +24,25 @@ section.message {
   min-width: 400px;
 }
 
+.main-editor {
+  border: 0;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  box-sizing: border-box;
+  font-family: monospace;
+  margin: 0;
+  outline: 0;
+}
+
+.main-editor .cm-editor {
+  height: 100%;
+}
+
+.main-editor .cm-scroller {
+  max-height: 500px;
+  overflow: auto;
+}
+
 .too-long-warning {
   display: none;
 }
@@ -40,16 +59,9 @@ section.message {
   margin-left: 0.5em;
 }
 .main-textarea {
-  border: 0;
-  border-bottom: 1px solid gray;
-  border-top: 1px solid gray;
-  box-sizing: border-box;
-  font-family: monospace;
-  margin: 0;
-  outline: 0;
-  padding: 5px;
+  display: none;
 }
-.CodeMirror-empty {
+.cm-editor .cm-placeholder {
   color: lightgray;
 }
 
