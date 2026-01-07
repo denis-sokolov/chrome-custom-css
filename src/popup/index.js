@@ -1,5 +1,7 @@
 const $ = document.querySelector.bind(document);
 
+const MAX_CSS_LENGTH = 7500;
+
 const invalidTabStep = function () {
   $(".invalid-tab").style.display = "block";
 };
@@ -33,7 +35,7 @@ const mainStep = async function (domain) {
 
   // Get the textarea element
   const textarea = $(".main-textarea");
-  const maxlength = parseInt(textarea.getAttribute('maxlength') || '7500', 10);
+  const maxlength = parseInt(textarea.getAttribute('maxlength') || MAX_CSS_LENGTH, 10);
   
   // Replace textarea with a div for CodeMirror 6
   const editorContainer = document.createElement('div');

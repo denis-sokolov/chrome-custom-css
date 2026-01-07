@@ -58,6 +58,7 @@ section.message {
   font-size: 70%;
   margin-left: 0.5em;
 }
+/* Hidden textarea element - kept for maxlength and placeholder attributes that are read by the CodeMirror 6 editor */
 .main-textarea {
   display: none;
 }
