@@ -33,7 +33,7 @@ const mainStep = async function (domain) {
 
   // Get the textarea element
   const textarea = $(".main-textarea");
-  const maxlength = textarea.getAttribute('maxlength');
+  const maxlength = parseInt(textarea.getAttribute('maxlength') || '7500', 10);
   
   // Replace textarea with a div for CodeMirror 6
   const editorContainer = document.createElement('div');
