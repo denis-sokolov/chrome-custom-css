@@ -7,8 +7,6 @@ export const Origins = (function () {
       api.urlToOrigin("https://" + domain),
     ],
     urlMatchesDomain: (url, domain) => api.urlToDomain(url) === domain,
-    urlMatchesOrigin: (url, origin) =>
-      api.urlMatchesDomain(api.toDomain(origin)),
     urlToDomain: (url) => new URL(url).hostname,
     urlToOrigin: (url) => {
       const t = new URL(url);
