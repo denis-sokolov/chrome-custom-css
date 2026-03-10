@@ -2,8 +2,9 @@
   "name": "custom-css",
   "description": "An extension for Google Chrome to add custom CSS on websites.",
   "scripts": {
-    "format": "prettier --end-of-line auto --write 'src/**/*.{css,html,js}'",
-    "pack": "rm -rf dist && mkdir dist && cp -r _locales manifest.json src dist/ && mkdir -p dist/node_modules/codemirror/lib dist/node_modules/codemirror/mode/css dist/node_modules/codemirror/addon/display && cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/codemirror.js dist/node_modules/codemirror/lib/ && cp node_modules/codemirror/mode/css/css.js dist/node_modules/codemirror/mode/css/ && cp node_modules/codemirror/addon/display/placeholder.js dist/node_modules/codemirror/addon/display/",
+    "dev": "rm -rf dev && tsc --project tsconfig.dev.json && cd dev && ln -s ../manifest.json && ln -s ../_locales && ln -s ../node_modules && cd src && ln -s ../../src/icons && cd popup && ln -s ../../../src/popup/index.html && ln -s ../../../src/popup/style.css &&  cd ../../../ && tsc --project tsconfig.dev.json --watch",
+    "format": "prettier --end-of-line auto --write 'src/**/*.{css,html,ts}'",
+    "pack": "rm -rf dist && tsc && cp manifest.json dist/ && cp -r _locales dist/ && cp src/popup/index.html src/popup/style.css dist/src/popup/ && cp -r src/icons dist/src/ && mkdir -p dist/node_modules/codemirror/lib dist/node_modules/codemirror/mode/css dist/node_modules/codemirror/addon/display && cp node_modules/codemirror/lib/codemirror.css node_modules/codemirror/lib/codemirror.js dist/node_modules/codemirror/lib/ && cp node_modules/codemirror/mode/css/css.js dist/node_modules/codemirror/mode/css/ && cp node_modules/codemirror/addon/display/placeholder.js dist/node_modules/codemirror/addon/display/",
     "verify": "npm run format"
   },
   "license": "ISC",
@@ -12,6 +13,7 @@
     "@types/chrome": "^0.0.202",
     "codemirror": "^5.65.17",
     "eslint": "^8.28.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "typescript": "^6.0.1-rc"
   }
 }
