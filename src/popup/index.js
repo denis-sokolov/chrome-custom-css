@@ -31,7 +31,6 @@ const mainStep = async function (domain) {
 
   $(".main").style.display = "block";
 
-
   // Have to create the editor after the element is visible,
   // or initially the cursor is not displayed.
   const editor = CodeMirror.fromTextArea($(".main-textarea"), {
@@ -46,9 +45,9 @@ const mainStep = async function (domain) {
       domain: domain,
     });
 
-    const maxlength = $(".main-textarea").getAttribute('maxlength');
-    if (css.length > maxlength) $('.main').dataset.tooLong = true;
-    else delete $('.main').dataset.tooLong;
+    const maxlength = $(".main-textarea").getAttribute("maxlength");
+    if (css.length > maxlength) $(".main").dataset.tooLong = true;
+    else delete $(".main").dataset.tooLong;
   });
 
   editor.setValue(initialCss);
