@@ -12,6 +12,7 @@
     "CodeMirror": false,
     "globalThis": false,
     "Map": false,
+    "Set": false,
     "Permissions": true,
     "Persist": true,
     "Promise": false,
