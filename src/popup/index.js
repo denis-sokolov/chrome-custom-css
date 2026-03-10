@@ -22,7 +22,7 @@ const permissionStep = function (domain) {
 };
 
 const mainStep = async function (domain) {
-  const initialCss = await Persist.get(domain);
+  const initialSettings = await Persist.get(domain);
 
   $(".main-textarea-label").innerText = chrome.i18n.getMessage(
     "main_textarea_label",
@@ -40,8 +40,8 @@ const mainStep = async function (domain) {
   editor.on("change", function () {
     const css = editor.getValue();
     chrome.runtime.sendMessage({
-      type: "css-changed",
-      css: css,
+      type: "settings-changed",
+      settings: { ...initialSettings, css },
       domain: domain,
     });
 
@@ -50,7 +50,7 @@ const mainStep = async function (domain) {
     else delete $(".main").dataset.tooLong;
   });
 
-  editor.setValue(initialCss);
+  editor.setValue(initialSettings.css);
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {

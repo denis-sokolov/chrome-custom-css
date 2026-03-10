@@ -20,9 +20,9 @@ const initTab = async function (tab) {
   if (!url) return;
   const domain = Origins.urlToDomain(url);
   const t = await Promise.all([Persist.get(domain), injectTabCode(tab)]);
-  const css = t[0];
-  if (!css) return;
-  updateTabCss(tab, css);
+  const settings = t[0];
+  if (!settings.css) return;
+  updateTab(tab, settings);
 };
 
 const initTabs = async function (tabs) {
@@ -36,23 +36,23 @@ const injectTabCode = async function (tab) {
   });
 };
 
-const updateTabCss = function (tab, css) {
+const updateTab = function (tab, settings) {
   chrome.tabs.sendMessage(tab.id, {
-    type: "your-css-changed",
-    css: css,
+    type: "your-settings-changed",
+    settings: settings,
   });
 };
 
 setTimeout(async function () {
-  const isWorthyCss = (css) => Boolean(css.trim());
+  const isWorthy = (settings) => Boolean(settings.css.trim());
 
   const items = await Persist.getAll();
   const domainsToKeep = items
-    .filter((item) => isWorthyCss(item.css))
+    .filter((item) => isWorthy(item.settings))
     .map((item) => item.domain);
 
   Persist.remove(
-    items.filter((item) => !isWorthyCss(item.css)).map((item) => item.domain)
+    items.filter((item) => !isWorthy(item.settings)).map((item) => item.domain)
   );
 
   const origins = await Permissions.getAllOrigins();
@@ -76,9 +76,9 @@ Permissions.onAddedOrigins(function (origins) {
 });
 
 chrome.runtime.onMessage.addListener(async function (msg) {
-  if (msg.type === "css-changed") {
+  if (msg.type === "settings-changed") {
     const tabs = await getTabsForDomain(msg.domain);
-    tabs.forEach((tab) => updateTabCss(tab, msg.css));
-    Persist.set(msg.domain, msg.css);
+    tabs.forEach((tab) => updateTab(tab, msg.settings));
+    Persist.set(msg.domain, msg.settings);
   }
 });

@@ -15,8 +15,8 @@
   document.head.appendChild(style);
 
   chrome.runtime.onMessage.addListener(function (msg) {
-    if (msg.type === "your-css-changed") {
-      style.innerHTML = msg.css;
+    if (msg.type === "your-settings-changed") {
+      style.innerHTML = msg.settings.css;
     }
   });
 })();
