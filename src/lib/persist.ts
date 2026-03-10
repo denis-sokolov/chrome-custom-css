@@ -1,23 +1,31 @@
+export type Settings = {
+  css: string;
+  textAttributesSelector: string;
+};
+
 export const Persist = (function () {
-  const mapToObject = (input) => {
-    const output = {};
+  const mapToObject = (input: Iterable<[string, any]>) => {
+    const output: Record<string, any> = {};
     for (let [k, v] of input) output[k] = v;
     return output;
   };
   const prefix = "custom-css-";
-  const keyFor = (domain) => prefix + domain;
-  const isDomainKey = (key) => key.startsWith(prefix);
-  const domainFromKey = (key) => key.substr(prefix.length);
-  const settingsFromValue = (value) => ({
+  const keyFor = (domain: string) => prefix + domain;
+  const isDomainKey = (key: string) => key.startsWith(prefix);
+  const domainFromKey = (key: string) => key.substr(prefix.length);
+  const settingsFromValue = (value: Partial<Settings>) => ({
     css: value.css || "",
     textAttributesSelector: value.textAttributesSelector || "",
   });
-  const writeCache = new globalThis.Map();
+  const writeCache = new globalThis.Map<
+    string,
+    Settings & { updated: number }
+  >();
   let writeQueued = false;
 
-  const get = async function (domain) {
+  const get = async function (domain: string) {
     const key = keyFor(domain);
-    if (writeCache.has(key)) return settingsFromValue(writeCache.get(key));
+    if (writeCache.has(key)) return settingsFromValue(writeCache.get(key)!);
     const storage = await chrome.storage.sync.get(key);
     return settingsFromValue(storage[key] || {});
   };
@@ -30,7 +38,7 @@ export const Persist = (function () {
         .filter(isDomainKey)
         .map((key) => ({
           domain: domainFromKey(key),
-          settings: settingsFromValue(storage[key]),
+          settings: settingsFromValue(storage[key] as Partial<Settings>),
         }));
       for (let [k, v] of writeCache)
         result.push({
@@ -39,12 +47,15 @@ export const Persist = (function () {
         });
       return result;
     },
-    remove: async function (domains) {
+    remove: async function (domains: string[]) {
       const keys = domains.map(keyFor);
       keys.forEach((key) => writeCache.delete(key));
       await chrome.storage.sync.remove(keys);
     },
-    set: async function (domain, change) {
+    set: async function (
+      domain: string,
+      change: (settings: Settings) => Settings
+    ) {
       writeCache.set(keyFor(domain), {
         ...change(await get(domain)),
         updated: Date.now(),

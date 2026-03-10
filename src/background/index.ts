@@ -1,9 +1,9 @@
 import { Origins } from "../lib/origins.js";
 import { Permissions } from "../lib/permissions.js";
-import { Persist } from "../lib/persist.js";
+import { Persist, type Settings } from "../lib/persist.js";
 
-const getTabsForDomain = async function (domain) {
-  const tabMatchesDomain = function (tab, domain) {
+const getTabsForDomain = async function (domain: string) {
+  const tabMatchesDomain = function (tab: chrome.tabs.Tab, domain: string) {
     const url = tab.url;
     if (!url || !domain) return false;
     return Origins.urlMatchesDomain(url, domain);
@@ -13,7 +13,7 @@ const getTabsForDomain = async function (domain) {
   return tabs.filter((tab) => tabMatchesDomain(tab, domain));
 };
 
-const initTab = async function (tab) {
+const initTab = async function (tab: chrome.tabs.Tab) {
   const url = tab.url;
   if (!url) return;
   const domain = Origins.urlToDomain(url);
@@ -23,26 +23,26 @@ const initTab = async function (tab) {
   updateTab(tab, settings);
 };
 
-const initTabs = async function (tabs) {
+const initTabs = async function (tabs: chrome.tabs.Tab[]) {
   return Promise.all(tabs.map(initTab));
 };
 
-const injectTabCode = async function (tab) {
+const injectTabCode = async function (tab: chrome.tabs.Tab) {
   await chrome.scripting.executeScript({
-    target: { tabId: tab.id },
+    target: { tabId: tab.id! },
     files: ["src/content/index.js"],
   });
 };
 
-const updateTab = function (tab, settings) {
-  chrome.tabs.sendMessage(tab.id, {
+const updateTab = function (tab: chrome.tabs.Tab, settings: any) {
+  chrome.tabs.sendMessage(tab.id!, {
     type: "your-settings-changed",
     settings: settings,
   });
 };
 
 setTimeout(async function () {
-  const isWorthy = (settings) => Boolean(settings.css.trim());
+  const isWorthy = (settings: Settings) => Boolean(settings.css.trim());
 
   const items = await Persist.getAll();
   const domainsToKeep = items

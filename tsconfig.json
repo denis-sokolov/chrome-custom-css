@@ -2,7 +2,6 @@
   "compilerOptions": {
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "allowJs": true,
     "exactOptionalPropertyTypes": true,
     "lib": ["esnext", "dom"],
     "module": "esnext",
@@ -21,6 +20,6 @@
     "types": ["chrome"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.js", "src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": []
 }
