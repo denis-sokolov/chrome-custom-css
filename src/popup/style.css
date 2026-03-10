@@ -17,6 +17,12 @@ section.message {
   padding: 0 40px;
 }
 
+label[title] .text {
+  text-decoration: underline dotted;
+  text-decoration-color: #a2a2a2;
+  text-underline-offset: 2px;
+}
+
 .main {
   max-height: 600px;
   min-height: 350px;
@@ -51,6 +57,19 @@ section.message {
 }
 .CodeMirror-empty {
   color: lightgray;
+}
+
+.text-attributes {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+.text-attributes input {
+  display: block;
+  box-sizing: border-box;
+  margin: 2px 0;
+  padding: 2px 4px;
+  width: 100%;
 }
 
 .footer {

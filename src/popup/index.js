@@ -56,6 +56,13 @@ const mainStep = async function (domain) {
   });
 
   editor.setValue(currentSettings.css);
+
+  const textInput = $(".text-attributes input");
+  textInput.value = currentSettings.textAttributesSelector;
+  textInput.addEventListener("input", function () {
+    currentSettings.textAttributesSelector = textInput.value;
+    sync();
+  });
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {

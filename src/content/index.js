@@ -14,9 +14,70 @@
   style.setAttribute("data-custom-css-by-denis", "");
   document.head.appendChild(style);
 
+  const textLength = 300;
+
+  const applyTextAttribute = function (el) {
+    const text = el.textContent;
+    if (text && text.trim()) el.setAttribute("text", text.slice(0, textLength));
+    else el.removeAttribute("text");
+  };
+
+  let textAttributeObserver = null;
+  let textAttributeSelector = null;
+  const updateTextAttributes = function (selector) {
+    selector = selector.trim();
+    if (selector === textAttributeSelector && textAttributeObserver) return;
+    if (textAttributeObserver) {
+      textAttributeObserver.disconnect();
+      textAttributeObserver = null;
+    }
+    document
+      .querySelectorAll("[text]")
+      .forEach((el) => el.removeAttribute("text"));
+    textAttributeSelector = selector;
+    if (!selector) return;
+
+    let elements;
+    try {
+      elements = document.querySelectorAll(selector);
+    } catch (e) {
+      /* Invalid selector */ return;
+    }
+    elements.forEach(applyTextAttribute);
+    textAttributeObserver = new MutationObserver(function (mutations) {
+      const toUpdate = new Set();
+      mutations.forEach(function (mutation) {
+        let node = mutation.target;
+        if (node.nodeType === Node.TEXT_NODE) {
+          node = node.parentElement;
+          if (!node) return;
+        }
+        while (node && node.nodeType === Node.ELEMENT_NODE) {
+          toUpdate.add(node);
+          node = node.parentElement;
+        }
+        mutation.addedNodes.forEach(function (added) {
+          if (added.nodeType === Node.ELEMENT_NODE) {
+            toUpdate.add(added);
+            added.querySelectorAll("*").forEach((child) => toUpdate.add(child));
+          }
+        });
+      });
+      toUpdate.forEach(function (el) {
+        if (el.matches(selector)) applyTextAttribute(el);
+      });
+    });
+    textAttributeObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+  };
+
   chrome.runtime.onMessage.addListener(function (msg) {
     if (msg.type === "your-settings-changed") {
       style.innerHTML = msg.settings.css;
+      updateTextAttributes(msg.settings.textAttributesSelector);
     }
   });
 })();

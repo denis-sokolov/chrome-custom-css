@@ -8,7 +8,10 @@ globalThis.Persist = (function () {
   const keyFor = (domain) => prefix + domain;
   const isDomainKey = (key) => key.startsWith(prefix);
   const domainFromKey = (key) => key.substr(prefix.length);
-  const settingsFromValue = (value) => ({ css: value.css || "" });
+  const settingsFromValue = (value) => ({
+    css: value.css || "",
+    textAttributesSelector: value.textAttributesSelector || "",
+  });
   const writeCache = new globalThis.Map();
   let writeQueued = false;
 
