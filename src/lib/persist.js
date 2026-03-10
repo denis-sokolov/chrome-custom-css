@@ -12,13 +12,15 @@ globalThis.Persist = (function () {
   const writeCache = new globalThis.Map();
   let writeQueued = false;
 
+  const get = async function (domain) {
+    const key = keyFor(domain);
+    if (writeCache.has(key)) return settingsFromValue(writeCache.get(key));
+    const storage = await chrome.storage.sync.get(key);
+    return settingsFromValue(storage[key] || {});
+  };
+
   return {
-    get: async function (domain) {
-      const key = keyFor(domain);
-      if (writeCache.has(key)) return settingsFromValue(writeCache.get(key));
-      const storage = await chrome.storage.sync.get(key);
-      return settingsFromValue(storage[key] || {});
-    },
+    get: get,
     getAll: async function () {
       const storage = await chrome.storage.sync.get(null);
       const result = Object.keys(storage)
@@ -39,9 +41,9 @@ globalThis.Persist = (function () {
       keys.forEach((key) => writeCache.delete(key));
       await chrome.storage.sync.remove(keys);
     },
-    set: function (domain, settings) {
+    set: async function (domain, change) {
       writeCache.set(keyFor(domain), {
-        ...settings,
+        ...change(await get(domain)),
         updated: Date.now(),
       });
       if (!writeQueued) {
@@ -53,7 +55,6 @@ globalThis.Persist = (function () {
           writeQueued = false;
         }, 1000);
       }
-      return Promise.resolve();
     },
   };
 })();

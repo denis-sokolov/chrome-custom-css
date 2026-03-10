@@ -79,6 +79,6 @@ chrome.runtime.onMessage.addListener(async function (msg) {
   if (msg.type === "settings-changed") {
     const tabs = await getTabsForDomain(msg.domain);
     tabs.forEach((tab) => updateTab(tab, msg.settings));
-    Persist.set(msg.domain, msg.settings);
+    Persist.set(msg.domain, () => msg.settings);
   }
 });
