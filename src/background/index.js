@@ -1,8 +1,6 @@
-import "../lib/origins.js";
-import "../lib/permissions.js";
-import "../lib/persist.js";
-
-const { Origins, Permissions, Persist } = globalThis;
+import { Origins } from "../lib/origins.js";
+import { Permissions } from "../lib/permissions.js";
+import { Persist } from "../lib/persist.js";
 
 const getTabsForDomain = async function (domain) {
   const tabMatchesDomain = function (tab, domain) {

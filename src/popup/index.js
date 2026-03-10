@@ -1,3 +1,7 @@
+import { Origins } from "../lib/origins.js";
+import { Permissions } from "../lib/permissions.js";
+import { Persist } from "../lib/persist.js";
+
 const $ = document.querySelector.bind(document);
 
 const invalidTabStep = function () {

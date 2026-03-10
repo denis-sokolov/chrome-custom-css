@@ -1,4 +1,4 @@
-globalThis.Persist = (function () {
+export const Persist = (function () {
   const mapToObject = (input) => {
     const output = {};
     for (let [k, v] of input) output[k] = v;

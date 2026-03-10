@@ -1,4 +1,4 @@
-globalThis.Permissions = (function () {
+export const Permissions = (function () {
   const api = {
     checkOrigin: async function (origin) {
       const permissions = await chrome.permissions.getAll();

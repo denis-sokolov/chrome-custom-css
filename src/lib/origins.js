@@ -1,4 +1,4 @@
-globalThis.Origins = (function () {
+export const Origins = (function () {
   const api = {
     cosmeticDomain: (domain) => domain.replace(/^.+\/\/(www\.)?/, ""),
     originToDomain: (origin) => api.urlToDomain(origin),
