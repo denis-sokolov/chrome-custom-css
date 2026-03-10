@@ -22,7 +22,7 @@ const permissionStep = function (domain) {
 };
 
 const mainStep = async function (domain) {
-  const initialSettings = await Persist.get(domain);
+  let currentSettings = await Persist.get(domain);
 
   $(".main-textarea-label").innerText = chrome.i18n.getMessage(
     "main_textarea_label",
@@ -37,20 +37,25 @@ const mainStep = async function (domain) {
     autofocus: true,
   });
 
-  editor.on("change", function () {
-    const css = editor.getValue();
+  function sync() {
     chrome.runtime.sendMessage({
       type: "settings-changed",
-      settings: { ...initialSettings, css },
+      settings: currentSettings,
       domain: domain,
     });
+  }
+
+  editor.on("change", function () {
+    currentSettings.css = editor.getValue();
+    sync();
 
     const maxlength = $(".main-textarea").getAttribute("maxlength");
-    if (css.length > maxlength) $(".main").dataset.tooLong = true;
+    if (currentSettings.css.length > maxlength)
+      $(".main").dataset.tooLong = true;
     else delete $(".main").dataset.tooLong;
   });
 
-  editor.setValue(initialSettings.css);
+  editor.setValue(currentSettings.css);
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
