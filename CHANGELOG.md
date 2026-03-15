@@ -1,3 +1,7 @@
+# 1.4.0
+
+- It is now possible to elements based on their text, something not possible with pure CSS.
+
 # 1.3.5
 
 - Improve placeholder color.
